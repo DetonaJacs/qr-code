@@ -185,7 +185,7 @@ async function handleShare() {
 
         // Texto personalizado para compartilhamento
         const shareText = `Eu criei um QR Code para WhatsApp! ✨\n\n` +
-                         `Crie você também QR Codes personalizados em ${teste}\n` +
+                         `Crie você também QR Codes personalizados em ${window.location.href}\n` +
                          `#QRCode #WhatsApp #Compartilhar`;
         
         // Dados para compartilhamento
@@ -193,7 +193,7 @@ async function handleShare() {
             files: [file],
             title: "QR Code WhatsApp - Gerado Online",
             text: shareText,
-            url: teste  // Para dispositivos que não suportam files[]
+            url: window.location.href  // Para dispositivos que não suportam files[]
         };
 
         // Verificar se a API de compartilhamento está disponível
@@ -204,7 +204,7 @@ async function handleShare() {
             await navigator.share({
                 title: "QR Code WhatsApp - Gerado Online",
                 text: shareText + "\n\n(Download da imagem disponível no site)",
-                url: teste
+                url: window.location.href
             });
         }
         
@@ -213,7 +213,7 @@ async function handleShare() {
         
         // Fallback para copiar texto manualmente
         if (confirm("Seu navegador não suporta compartilhamento direto. Deseja copiar o link para compartilhar manualmente?")) {
-            const shareText = `Eu criei um QR Code para WhatsApp! Acesse ${teste} para criar o seu.`;
+            const shareText = `Eu criei um QR Code para WhatsApp! Acesse ${window.location.href} para criar o seu.`;
             await navigator.clipboard.writeText(shareText);
             alert("Texto copiado! Cole onde desejar compartilhar.");
         }
