@@ -3,6 +3,7 @@ const qrContainer = document.querySelector("#qr-code");
 const qrText = document.querySelector(".qr-text");
 const shareBtn = document.querySelector(".share-btn");
 const sizes = document.querySelector(".sizes");
+const whatsappBtn = document.querySelector(".whatsapp-btn");
 
 // Configurações iniciais
 const defaultUrl = "https://exemplo.com";
@@ -11,12 +12,13 @@ let colorLight = "#ffffff",
     text = defaultUrl,
     size = 400;
 
-const fixedLogo = "./img/logo.png"; // Caminho da sua logo
+const fixedLogo = "./img/logo.png";
 
 // Event listeners
 qrText.addEventListener("input", handleQRText);
 sizes.addEventListener("change", handleSize);
 shareBtn.addEventListener("click", handleShare);
+whatsappBtn.addEventListener("click", generateWhatsAppQR);
 
 function handleQRText(e) {
     text = e.target.value || defaultUrl;
@@ -28,10 +30,25 @@ function handleSize(e) {
     generateQRCode();
 }
 
+function generateWhatsAppQR() {
+    const phoneNumber = prompt("Digite o número de WhatsApp (com DDD, sem espaços ou caracteres especiais):");
+    if (phoneNumber) {
+        const message = prompt("Digite a mensagem inicial (opcional):");
+        let whatsappUrl = `https://wa.me/${phoneNumber}`;
+        
+        if (message) {
+            whatsappUrl += `?text=${encodeURIComponent(message)}`;
+        }
+        
+        qrText.value = whatsappUrl;
+        text = whatsappUrl;
+        generateQRCode();
+    }
+}
+
 async function generateQRCode() {
     qrContainer.innerHTML = "";
     
-    // Criar QR Code em um canvas oculto primeiro
     const tempDiv = document.createElement("div");
     new QRCode(tempDiv, {
         text,
@@ -41,13 +58,9 @@ async function generateQRCode() {
         colorDark
     });
     
-    // Processar a imagem completa com logo
     const combinedUrl = await generateQRWithLogo(tempDiv.querySelector("canvas"));
     
-    // Exibir na página
     qrContainer.innerHTML = `<img src="${combinedUrl}" alt="QR Code" style="width:${size}px;height:${size}px">`;
-    
-    // Configurar download
     download.href = combinedUrl;
 }
 
