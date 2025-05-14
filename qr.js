@@ -174,31 +174,28 @@ async function handleShare() {
           return;
       }
 
-      // Obter imagem e criar arquivo
+      // Obter imagem como blob
       const blob = await (await fetch(qrImg.src)).blob();
-      const file = new File([blob], "QRCode-WhatsApp.png", { type: blob.type });
+      const file = new File([blob], "WhatsApp-QRCode.png", { type: blob.type });
 
-      // Texto de compartilhamento
-      const shareText = `Eu criei um QR Code para WhatsApp! ✨\n\n` +
-                       `Crie você também em: qr-code-silk-alpha.vercel.app\n` +
-                       `#QRCode #WhatsApp`;
-
-      // Tentar compartilhar imagem + texto
+      // Tentar compartilhar apenas a imagem
       if (navigator.canShare?.({ files: [file] })) {
           await navigator.share({
               files: [file],
-              text: shareText,
               title: "QR Code WhatsApp"
           });
       } else {
-          // Compartilhar apenas texto
-          await navigator.share({
-              title: "QR Code WhatsApp",
-              text: shareText
-          });
+          // Fallback: Download da imagem
+          const downloadLink = document.createElement('a');
+          downloadLink.href = URL.createObjectURL(file);
+          downloadLink.download = "WhatsApp-QRCode.png";
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+          alert("Imagem baixada! Agora você pode compartilhá-la manualmente.");
       }
   } catch (error) {
-      console.log("Compartilhamento cancelado ou não suportado");
+      console.log("Compartilhamento cancelado:", error);
   }
 }
 
