@@ -1,231 +1,154 @@
 * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f0f2f5;
-      padding: 20px;
-    }
-
-    section {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 500px;
-    }
-
-    .row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-      flex-wrap: wrap;
-    }
-
-    input[type="color"] {
-      width: 50px;
-      height: 50px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .sizes {
-      flex: 1;
-      min-width: 150px;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ddd;
-      font-size: 16px;
-    }
-
-    .qr-text {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-
-    #qr-code {
-      display: flex;
-      justify-content: center;
-      margin: 20px 0;
-      min-height: 300px;
-    }
-
-    .action-container {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.3s;
-    }
-
-    .download {
-      background: #4CAF50;
-      color: white;
-    }
-
-    .download:hover {
-      background: #45a049;
-    }
-
-    .share-btn {
-      background: #2196F3;
-      color: white;
-    }
-
-    .share-btn:hover {
-      background: #0b7dda;
-    }
-
-    .btn img {
-      width: 20px;
-      height: 20px;
-      filter: invert(1);
-    }
-
-    @media (max-width: 480px) {
-      .action-container {
-        flex-direction: column;
-      }
-      
-      .btn {
-        justify-content: center;
-      }
-    }
-
-    .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    font-size: 20px;
-    color: white;
-    margin-left: 8px;
-    }
-
-    #qr-code {
-    border: 10px solid #f0f2f5; /* Cor de fundo da borda */
-    border-radius: 15px; /* Borda arredondada */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    padding: 10px; /* Espaçamento interno */
-    background: white; /* Fundo branco para contrastar */
-    margin: 20px 0; /* Margem externa */
-    }
-
-    #qr-code {
-    /* Estilo base */
-    border: 10px solid #f0f2f5;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    background: white;
-    margin: 20px auto;
-    padding: 15px;
-    max-width: fit-content;
-
-    /* Efeito de transição */
-    transition: all 0.3s ease;
-    }
-
-    #qr-code:hover {
-    transform: scale(1.02); /* Aumenta levemente ao passar o mouse */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Estilo para o canvas (elemento gerado pela biblioteca QRCode) */
-    #qr-code canvas {
-    border-radius: 8px; /* Borda arredondada no QR Code */
-    }
-    .logo-upload {
-  margin-bottom: 15px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.logo-upload label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f2f5;
+  padding: 20px;
 }
 
-.logo-size-container {
+section {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
   margin-bottom: 20px;
 }
 
-.logo-size-container label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
-}
-
-#logo-size {
-  width: 100%;
-  margin-bottom: 5px;
-}
-
-#logo-size-value {
-  display: inline-block;
-  width: 100%;
+.sizes {
+  width: 120px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 16px;
   text-align: center;
-  font-size: 14px;
+}
+
+.qr-text {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-bottom: 25px;
+  text-align: center;
 }
 
 #qr-code {
-  position: relative;
-}
-
-#qr-code img.logo-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  margin: 0 auto 25px;
   background: white;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-#qr-code {
+  border: 15px solid #f0f2f5;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#qr-code .fixed-logo-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 5px;
+#qr-code > img,
+#qr-code > canvas {
+  width: 100% !important;
+  height: 100% !important;
   border-radius: 5px;
-  pointer-events: none; /* Impede interação do usuário com a logo */
 }
 
 .fixed-logo-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white !important; /* Fundo branco obrigatório */
-    padding: 5px;
-    border: 1px solid #eee; /* Borda sutil para ajudar contraste */
-    border-radius: 3px;
-    pointer-events: none;
-    object-fit: contain; /* Mantém a proporção da logo */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: white;
+  padding: 5px;
+  border: 2px solid #000;
+  border-radius: 10px;
+  pointer-events: none;
+  object-fit: contain;
+}
+
+.action-container {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.download {
+  background: #4CAF50;
+  color: white;
+}
+
+.download:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+}
+
+.share-btn {
+  background: #2196F3;
+  color: white;
+}
+
+.share-btn:hover {
+  background: #0b7dda;
+  transform: translateY(-2px);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-size: 20px;
+  color: white;
+}
+
+@media (max-width: 480px) {
+  section {
+    padding: 20px 15px;
+  }
+  
+  #qr-code {
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+    aspect-ratio: 1/1;
+    border-width: 10px;
+  }
+  
+  .action-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
