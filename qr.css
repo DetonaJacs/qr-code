@@ -101,6 +101,7 @@ section {
   cursor: pointer;
   text-decoration: none;
   transition: all 0.3s;
+  text-align: center;
 }
 
 .download {
@@ -173,4 +174,71 @@ section {
 
 .row select.sizes {
   flex-grow: 1;
+}
+
+/* Adicione estas regras ao seu arquivo CSS */
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-row {
+  margin-bottom: 15px;
+}
+
+.input-row label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #555;
+}
+
+.input-row input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.toggle-whatsapp-btn {
+  background: #25D366;
+  color: white;
+  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* espaço entre o texto e o ícone */
+  text-align: center;
+  width: 100%; /* ou ajuste conforme desejado */
+  padding: 10px 20px;
+}
+
+.toggle-whatsapp-btn:hover {
+  background: #128C7E;
+}
+
+.generate-whatsapp-btn {
+  background: #075E54;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* espaço entre o texto e o ícone */
+  text-align: center;
+  width: 100%; /* ou ajuste conforme desejado */
+  padding: 10px 20px;
+
+}
+
+
+.generate-whatsapp-btn:hover {
+  background: #128C7E;
+}
+
+.whatsapp-fields {
+  transition: all 0.3s ease;
+}
+
+.default-fields {
+  transition: all 0.3s ease;
 }
