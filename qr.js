@@ -182,22 +182,15 @@ async function handleShare() {
       const file = new File([blob], "QRCode-WhatsApp.png", {
           type: blob.type
       });
-
-      // Texto personalizado para compartilhamento (com link)
-      const shareText = "Eu criei um QR Code para WhatsApp! ✨Crie você também QR Codes personalizados em www.site.com #QRCode #WhatsApp #Compartilhar";
       
       // Dados para compartilhamento com link incluso
       await navigator.share({
           files: [file],
-          text: shareText,
           title: "QR Code WhatsApp - Gerado Online",
           url: window.location.href  // Link incluído aqui
       });
 
-  } catch (error) {
-      console.error("Erro ao compartilhar:", error);
-      alert("Não foi possível compartilhar. Você pode salvar a imagem manualmente.");
-  }
+  } 
 }
 
 // Inicialização
