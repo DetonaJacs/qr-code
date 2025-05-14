@@ -152,3 +152,25 @@ section {
     justify-content: center;
   }
 }
+
+/* Estilo para o botão do WhatsApp */
+.whatsapp-btn {
+  background: #25D366;
+  color: white;
+}
+
+.whatsapp-btn:hover {
+  background: #128C7E;
+}
+
+/* Ajuste no layout da linha */
+.row {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.row select.sizes {
+  flex-grow: 1;
+}
