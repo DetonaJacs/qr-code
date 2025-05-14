@@ -3,7 +3,12 @@ const qrContainer = document.querySelector("#qr-code");
 const qrText = document.querySelector(".qr-text");
 const shareBtn = document.querySelector(".share-btn");
 const sizes = document.querySelector(".sizes");
-const whatsappBtn = document.querySelector(".whatsapp-btn");
+const toggleWhatsappBtn = document.querySelector(".toggle-whatsapp-btn");
+const generateWhatsappBtn = document.querySelector(".generate-whatsapp-btn");
+const whatsappFields = document.querySelector(".whatsapp-fields");
+const defaultFields = document.querySelector(".default-fields");
+const whatsappNumber = document.querySelector("#whatsapp-number");
+const whatsappMessage = document.querySelector("#whatsapp-message");
 
 // Configurações iniciais
 const defaultUrl = "https://exemplo.com";
@@ -18,7 +23,41 @@ const fixedLogo = "./img/logo.png";
 qrText.addEventListener("input", handleQRText);
 sizes.addEventListener("change", handleSize);
 shareBtn.addEventListener("click", handleShare);
-whatsappBtn.addEventListener("click", generateWhatsAppQR);
+toggleWhatsappBtn.addEventListener("click", toggleWhatsappFields);
+generateWhatsappBtn.addEventListener("click", generateWhatsappQR);
+
+function toggleWhatsappFields() {
+    whatsappFields.style.display = whatsappFields.style.display === "none" ? "block" : "none";
+    defaultFields.style.display = defaultFields.style.display === "none" ? "block" : "none";
+    
+    if (whatsappFields.style.display === "block") {
+        whatsappNumber.focus();
+    } else {
+        qrText.focus();
+    }
+}
+
+function generateWhatsappQR() {
+    const number = whatsappNumber.value.trim();
+    if (!number) {
+        alert("Por favor, digite um número de WhatsApp válido com DDD");
+        whatsappNumber.focus();
+        return;
+    }
+
+    // Remove caracteres não numéricos
+    const cleanNumber = number.replace(/\D/g, '');
+    
+    let whatsappUrl = `https://wa.me/${cleanNumber}`;
+    
+    if (whatsappMessage.value) {
+        whatsappUrl += `?text=${encodeURIComponent(whatsappMessage.value)}`;
+    }
+    
+    text = whatsappUrl;
+    generateQRCode();
+    qrText.value = whatsappUrl; // Atualiza também o campo normal
+}
 
 function handleQRText(e) {
     text = e.target.value || defaultUrl;
@@ -28,22 +67,6 @@ function handleQRText(e) {
 function handleSize(e) {
     size = e.target.value;
     generateQRCode();
-}
-
-function generateWhatsAppQR() {
-    const phoneNumber = prompt("Digite o número de WhatsApp (com DDD, sem espaços ou caracteres especiais):");
-    if (phoneNumber) {
-        const message = prompt("Digite a mensagem inicial (opcional):");
-        let whatsappUrl = `https://wa.me/${phoneNumber}`;
-        
-        if (message) {
-            whatsappUrl += `?text=${encodeURIComponent(message)}`;
-        }
-        
-        qrText.value = whatsappUrl;
-        text = whatsappUrl;
-        generateQRCode();
-    }
 }
 
 async function generateQRCode() {
