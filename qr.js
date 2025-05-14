@@ -188,8 +188,9 @@ async function handleShare() {
 
       // Texto personalizado
       const shareText = `Eu criei um QR Code para WhatsApp! ✨\n\n` +
-                        `Crie você também QR Codes personalizados em ${window.location.href}\n` +
-                        `#QRCode #WhatsApp #Compartilhar`;
+      `Crie você também QR Codes personalizados acessando: qr-code-silk-alpha.vercel.app\n` +
+      `#QRCode #WhatsApp #Compartilhar`;
+
 
       // Dados para compartilhar imagem + texto
       const shareData = {
@@ -218,8 +219,8 @@ async function handleShare() {
 
       // Fallback: copiar texto manualmente
       if (confirm("Seu navegador não suporta compartilhamento direto. Deseja copiar o link para compartilhar manualmente?")) {
-          const shareText = `Eu criei um QR Code para WhatsApp! Acesse ${window.location.href} para criar o seu.`;
-          try {
+        const shareText = `Eu criei um QR Code para WhatsApp! Acesse qr-code-silk-alpha.vercel.app para criar o seu.`;
+        try {
               await navigator.clipboard.writeText(shareText);
               alert("Texto copiado! Cole onde desejar compartilhar.");
               console.log("Texto copiado para a área de transferência.");
