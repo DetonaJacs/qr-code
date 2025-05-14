@@ -173,49 +173,50 @@ async function handleShare() {
             alert("Por favor, gere um QR Code primeiro");
             return;
         }
-        
-        // Obter a imagem como blob
+
+        // 1. Obter a imagem
         const response = await fetch(qrImg.src);
         const blob = await response.blob();
         
-        // Criar arquivo para compartilhamento
-        const file = new File([blob], "QRCode-WhatsApp.png", {
-            type: blob.type
-        });
-
-        // Texto personalizado para compartilhamento
-        const shareText = `Eu criei um QR Code para WhatsApp! ✨\n\n` +
-                         `Crie você também QR Codes personalizados em ${window.location.href}\n` +
-                         `#QRCode #WhatsApp #Compartilhar`;
+        // 2. Criar texto de compartilhamento
+        const shareMessage = `Eu criei um QR Code para WhatsApp! ✨\n` +
+                           `Crie o seu em: ${window.location.href}\n` +
+                           `#QRCode #WhatsApp`;
         
-        // Dados para compartilhamento
-        const shareData = {
-            files: [file],
-            title: "QR Code WhatsApp - Gerado Online",
-            text: shareText,
-            url: window.location.href  // Para dispositivos que não suportam files[]
-        };
-
-        // Verificar se a API de compartilhamento está disponível
-        if (navigator.canShare && navigator.canShare(shareData)) {
-            await navigator.share(shareData);
-        } else {
-            // Fallback para dispositivos que não suportam compartilhamento de arquivos
-            await navigator.share({
-                title: "QR Code WhatsApp - Gerado Online",
-                text: shareText + "\n\n(Download da imagem disponível no site)",
-                url: window.location.href
+        // 3. Estratégias diferentes para mobile/desktop
+        if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            // Para mobile - compartilhar imagem + texto
+            const file = new File([blob], "whatsapp-qrcode.png", { 
+                type: "image/png" 
             });
+            
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    text: shareMessage,
+                    title: "Meu QR Code WhatsApp"
+                });
+            } else {
+                // Fallback para WhatsApp Web
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage + "\n\nConfira meu QR Code:")}`;
+                window.open(whatsappUrl, '_blank');
+            }
+        } else {
+            // Para desktop - compartilhar apenas o texto com link
+            const whatsappUrl = `https://web.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+            window.open(whatsappUrl, '_blank');
         }
         
     } catch (error) {
         console.error("Erro ao compartilhar:", error);
         
-        // Fallback para copiar texto manualmente
-        if (confirm("Seu navegador não suporta compartilhamento direto. Deseja copiar o link para compartilhar manualmente?")) {
-            const shareText = `Eu criei um QR Code para WhatsApp! Acesse ${window.location.href} para criar o seu.`;
+        // Fallback universal
+        const shareText = `Confira este gerador de QR Code para WhatsApp: ${window.location.href}`;
+        if (navigator.clipboard) {
             await navigator.clipboard.writeText(shareText);
-            alert("Texto copiado! Cole onde desejar compartilhar.");
+            alert("Link copiado! Cole no WhatsApp para compartilhar.");
+        } else {
+            prompt("Copie este link para compartilhar:", shareText);
         }
     }
 }
