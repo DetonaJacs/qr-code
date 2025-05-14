@@ -11,7 +11,7 @@ const whatsappNumber = document.querySelector("#whatsapp-number");
 const whatsappMessage = document.querySelector("#whatsapp-message");
 
 // Configurações iniciais
-const defaultUrl = "https://exemplo.com";
+const defaultUrl = "https://qr-code-silk-alpha.vercel.app/";
 let colorLight = "#ffffff",
     colorDark = "#000000",
     text = defaultUrl,
