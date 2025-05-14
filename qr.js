@@ -186,50 +186,45 @@ async function handleShare() {
 // Inicialização
 generateQRCode();
 
-let deferredPrompt;
-        const installButton = document.getElementById('installButton');
+document.addEventListener('DOMContentLoaded', function() {
+      const installButton = document.getElementById('installButton');
+      
+      let deferredPrompt;
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // Impede o prompt automático
-            e.preventDefault();
-            // Guarda o evento para usar depois
-            deferredPrompt = e;
-            // Mostra o botão
-            installButton.style.display = 'block';
-            
-            // Detecta se é mobile
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            
-            if (!isMobile) {
-                installButton.style.display = 'none'; // Esconde em desktop
-            }
-        });
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        if (installButton) {
+          installButton.style.display = 'block';
+        }
+      });
 
+      if (installButton) {
         installButton.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                // Mostra o prompt de instalação
-                deferredPrompt.prompt();
-                // Espera a resposta do usuário
-                const { outcome } = await deferredPrompt.userChoice;
-                
-                if (outcome === 'accepted') {
-                    console.log('Usuário aceitou a instalação');
-                    installButton.style.display = 'none';
-                } else {
-                    console.log('Usuário recusou a instalação');
-                }
-                deferredPrompt = null;
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+              installButton.style.display = 'none';
             }
+          }
         });
+      }
 
-        window.addEventListener('appinstalled', () => {
-            console.log('PWA foi instalado');
-            installButton.style.display = 'none';
-        });
+      // Verificar se já está instalado
+      if (window.matchMedia('(display-mode: standalone)').matches && installButton) {
+        installButton.style.display = 'none';
+      }
 
-        // Verifica se já está instalado
-        window.addEventListener('load', () => {
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                installButton.style.display = 'none';
-            }
-        });
+      // Registrar Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('ServiceWorker registrado:', registration.scope);
+          })
+          .catch(err => {
+            console.log('Falha no ServiceWorker:', err);
+          });
+      }
+    });
