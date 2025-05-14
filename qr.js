@@ -168,30 +168,36 @@ const ctx = canvas.getContext("2d");
 
 async function handleShare() {
   try {
-      const qrImg = qrContainer.querySelector("img");
-      if (!qrImg) {
-          alert("Por favor, gere um QR Code primeiro");
-          return;
-      }
-      
-      // Obter a imagem como blob
-      const response = await fetch(qrImg.src);
-      const blob = await response.blob();
-      
-      // Criar arquivo para compartilhamento
-      const file = new File([blob], "QRCode-WhatsApp.png", {
-          type: blob.type
-      });
-      
-      // Dados para compartilhamento com link incluso
-      await navigator.share({
-          files: [file],
-          title: "QR Code WhatsApp - Gerado Online",
-          url: window.location.href  // Link incluído aqui
-      });
+    const qrImg = qrContainer.querySelector("img");
+    if (!qrImg) {
+      alert("Por favor, gere um QR Code primeiro");
+      return;
+    }
 
-  } 
+    // Obter a imagem como blob
+    const response = await fetch(qrImg.src);
+    const blob = await response.blob();
+
+    // Criar arquivo para compartilhamento
+    const file = new File([blob], "QRCode-WhatsApp.png", {
+      type: blob.type
+    });
+
+    // Verificar se o navegador suporta o compartilhamento com arquivos
+    if (navigator.canShare?.({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: "QR Code WhatsApp - Gerado Online",
+        url: window.location.href
+      });
+    } else {
+      console.warn("Compartilhamento de arquivos não suportado neste navegador.");
+    }
+  } catch (error) {
+    console.error("Erro ao tentar compartilhar:", error);
+  }
 }
+
 
 // Inicialização
 generateQRCode();
