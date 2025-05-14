@@ -173,27 +173,32 @@ async function handleShare() {
           alert("Por favor, gere um QR Code primeiro");
           return;
       }
+      
+      // Obter a imagem como blob
+      const response = await fetch(qrImg.src);
+      const blob = await response.blob();
+      
+      // Criar arquivo para compartilhamento
+      const file = new File([blob], "QRCode-WhatsApp.png", {
+          type: blob.type
+      });
 
-      // Obter imagem e criar arquivo
-      const blob = await (await fetch(qrImg.src)).blob();
-      const file = new File([blob], "WhatsApp-QRCode.png", { type: blob.type });
-
-      // Texto de compartilhamento
+      // Texto personalizado para compartilhamento (com link)
       const shareText = `Eu criei um QR Code para WhatsApp! ✨\n\n` +
-                       `Crie você também em: ${window.location.href}\n` +
-                       `#QRCode #WhatsApp`;
-
-      // Compartilhar imagem + texto
+                       `Crie você também QR Codes personalizados em ${window.location.href}\n` +
+                       `#QRCode #WhatsApp #Compartilhar`;
+      
+      // Dados para compartilhamento com link incluso
       await navigator.share({
           files: [file],
           text: shareText,
-          title: "QR Code WhatsApp"
-          link: window.location.href
+          title: "QR Code WhatsApp - Gerado Online",
+          url: window.location.href  // Link incluído aqui
       });
 
   } catch (error) {
-      console.log("Compartilhamento não foi possível", error);
-      alert("Não foi possível compartilhar diretamente. Você pode salvar a imagem e compartilhar manualmente.");
+      console.error("Erro ao compartilhar:", error);
+      alert("Não foi possível compartilhar. Você pode salvar a imagem manualmente.");
   }
 }
 
