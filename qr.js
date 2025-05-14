@@ -173,32 +173,25 @@ async function handleShare() {
           alert("Por favor, gere um QR Code primeiro");
           return;
       }
-
+      
       // Obter a imagem como blob
       const response = await fetch(qrImg.src);
       const blob = await response.blob();
-
+      
       // Criar arquivo para compartilhamento
       const file = new File([blob], "QRCode-WhatsApp.png", {
           type: blob.type
       });
 
-      // Link fixo do seu site (substitua pelo seu domínio real)
-      const fixedLink = "Eu criei um QR Code para WhatsApp! ✨\n\n" +
-                       "Crie você também QR Codes personalizados em https://qr-code-silk-alpha.vercel.app/\n" +
-                       "#QRCode #WhatsApp #Compartilhar";
+      // Texto personalizado para compartilhamento (com link)
+      const shareText = "Eu criei um QR Code para WhatsApp! ✨Crie você também QR Codes personalizados em www.site.com #QRCode #WhatsApp #Compartilhar";
       
-      // Texto personalizado para compartilhamento com link fixo
-      const shareText = `Eu criei um QR Code para WhatsApp! ✨\n\n` +
-                       `Crie você também QR Codes personalizados em ${fixedLink}\n` +
-                       `#QRCode #WhatsApp #Compartilhar`;
-      
-      // Dados para compartilhamento
+      // Dados para compartilhamento com link incluso
       await navigator.share({
           files: [file],
           text: shareText,
           title: "QR Code WhatsApp - Gerado Online",
-          url: fixedLink  // Usando o link fixo aqui
+          url: window.location.href  // Link incluído aqui
       });
 
   } catch (error) {
@@ -206,6 +199,7 @@ async function handleShare() {
       alert("Não foi possível compartilhar. Você pode salvar a imagem manualmente.");
   }
 }
+
 // Inicialização
 generateQRCode();
 
