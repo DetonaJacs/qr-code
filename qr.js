@@ -181,5 +181,55 @@ async function handleShare() {
     }
 }
 
+
+
 // Inicialização
 generateQRCode();
+
+let deferredPrompt;
+        const installButton = document.getElementById('installButton');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Impede o prompt automático
+            e.preventDefault();
+            // Guarda o evento para usar depois
+            deferredPrompt = e;
+            // Mostra o botão
+            installButton.style.display = 'block';
+            
+            // Detecta se é mobile
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (!isMobile) {
+                installButton.style.display = 'none'; // Esconde em desktop
+            }
+        });
+
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Mostra o prompt de instalação
+                deferredPrompt.prompt();
+                // Espera a resposta do usuário
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    console.log('Usuário aceitou a instalação');
+                    installButton.style.display = 'none';
+                } else {
+                    console.log('Usuário recusou a instalação');
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA foi instalado');
+            installButton.style.display = 'none';
+        });
+
+        // Verifica se já está instalado
+        window.addEventListener('load', () => {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                installButton.style.display = 'none';
+            }
+        });
