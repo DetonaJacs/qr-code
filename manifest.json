@@ -1,0 +1,16 @@
+{
+  "name": "Gerador de QR WhatsApp",
+  "short_name": "QR WhatsApp",
+  "description": "Gerador de QR Code para contato no WhatsApp",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#25D366",
+  "icons": [
+    {
+      "src": "img/logo.ico",
+      "sizes": "16x16",
+      "type": "image/png/ico"
+    }
+  ]
+}
