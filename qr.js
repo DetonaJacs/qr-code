@@ -184,7 +184,9 @@ async function handleShare() {
       });
 
       // Link fixo do seu site (substitua pelo seu domínio real)
-      const fixedLink = "https://seusite.com/gerador-qr-whatsapp";
+      const fixedLink = "Eu criei um QR Code para WhatsApp! ✨\n\n" +
+                       "Crie você também QR Codes personalizados em https://qr-code-silk-alpha.vercel.app/\n" +
+                       "#QRCode #WhatsApp #Compartilhar";
       
       // Texto personalizado para compartilhamento com link fixo
       const shareText = `Eu criei um QR Code para WhatsApp! ✨\n\n` +
