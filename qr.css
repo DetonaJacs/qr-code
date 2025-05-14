@@ -242,3 +242,26 @@ section {
 .default-fields {
   transition: all 0.3s ease;
 }
+
+/* Estilo do botão de instalação */
+        #installButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background-color: #25D366;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none; /* Inicialmente escondido */
+            cursor: pointer;
+        }
+        
+        #installButton:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
+        }
