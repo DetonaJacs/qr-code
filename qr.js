@@ -167,63 +167,62 @@ const ctx = canvas.getContext("2d");
 }
 
 async function handleShare() {
-    try {
-        const qrImg = qrContainer.querySelector("img");
-        if (!qrImg) {
-            alert("Por favor, gere um QR Code primeiro");
-            return;
-        }
-        
-        // Obter a imagem como blob
-        const response = await fetch(qrImg.src);
-        const blob = await response.blob();
-        
-        // Criar arquivo para compartilhamento
-        const file = new File([blob], "QRCode-WhatsApp.png", {
-            type: blob.type
-        });
+  try {
+      // Verificar se existe QR Code gerado
+      const qrImg = qrContainer.querySelector("img");
+      if (!qrImg) {
+          alert("Por favor, gere um QR Code primeiro");
+          return;
+      }
 
-        // Texto personalizado para compartilhamento
-        const shareText = `Eu criei um QR Code para WhatsApp! ✨\n\n` +
-                         `Crie você também QR Codes personalizados em ${window.location.href}\n` +
-                         `#QRCode #WhatsApp #Compartilhar`;
-        
-        // Dados para compartilhamento
-        const shareData = {
-            files: [file],
-            title: "QR Code WhatsApp - Gerado Online",
-            text: `Eu criei um QR Code para WhatsApp! ✨\n\n` +
-                         `Crie você também QR Codes personalizados em ${window.location.href}\n` +
-                         `#QRCode #WhatsApp #Compartilhar`,
-            url: window.location.href  // Para dispositivos que não suportam files[]
-        };
+      // Texto que será compartilhado
+      const shareText = `Eu criei um QR Code para WhatsApp! ✨\n\n` +
+                      `Crie você também QR Codes personalizados em ${window.location.href}\n` +
+                      `#QRCode #WhatsApp #Compartilhar`;
 
-        // Verificar se a API de compartilhamento está disponível
-        if (navigator.canShare && navigator.canShare(shareData)) {
-            await navigator.share(shareData);
-        } else {
-            // Fallback para dispositivos que não suportam compartilhamento de arquivos
-            await navigator.share({
-                title: "QR Code WhatsApp - Gerado Online",
-                text: `Eu criei um QR Code para WhatsApp! ✨\n\n` +
-                         `Crie você também QR Codes personalizados em ${window.location.href}\n` +
-                         `#QRCode #WhatsApp #Compartilhar`,
-                url: window.location.href
-            });
-        }
-        
-    } catch (error) {
-        console.error("Erro ao compartilhar:", error);
-        
-        // Fallback para copiar texto manualmente
-        if (confirm("Seu navegador não suporta compartilhamento direto. Deseja copiar o link para compartilhar manualmente?")) {
-            const shareText = `Eu criei um QR Code para WhatsApp! Acesse ${window.location.href} para criar o seu.`;
-            await navigator.clipboard.writeText(`Eu criei um QR Code para WhatsApp! ✨\n\n` +
-                         `Crie você também QR Codes personalizados em ${window.location.href}\n` +
-                         `#QRCode #WhatsApp #Compartilhar`);
-            alert("Texto copiado! Cole onde desejar compartilhar.");
-        }
-    }
+      // Tentar compartilhar imagem + texto
+      try {
+          const blob = await (await fetch(qrImg.src)).blob();
+          const file = new File([blob], "WhatsApp-QRCode.png", { type: blob.type });
+          
+          if (navigator.canShare?.({ files: [file] })) {
+              await navigator.share({
+                  files: [file],
+                  text: shareText,
+                  title: "QR Code WhatsApp"
+              });
+              return;
+          }
+      } catch (imageError) {
+          console.log("Não foi possível compartilhar a imagem", imageError);
+      }
+
+      // Se não conseguir compartilhar imagem, compartilhar apenas texto
+      if (navigator.share) {
+          await navigator.share({
+              title: "QR Code WhatsApp",
+              text: shareText
+          });
+      } else {
+          // Fallback para navegadores sem API de compartilhamento
+          await navigator.clipboard.writeText(shareText);
+          alert("Texto copiado! Agora você pode colar no WhatsApp ou onde desejar compartilhar.");
+          
+          // Opcional: fazer download automático da imagem
+          const downloadLink = document.createElement('a');
+          downloadLink.href = qrImg.src;
+          downloadLink.download = "WhatsApp-QRCode.png";
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+      }
+
+  } catch (error) {
+      console.log("Compartilhamento cancelado:", error);
+      if (error.name !== 'AbortError') {
+          alert("Você pode salvar a imagem e compartilhar manualmente.");
+      }
+  }
 }
 
 // Inicialização
