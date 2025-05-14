@@ -163,6 +163,7 @@ async function generateQRWithLogo(qrCanvas) {
 }
 
 async function handleShare() {
+async function handleShare() {
     try {
         const qrImg = qrContainer.querySelector("img");
         if (!qrImg) return;
@@ -171,10 +172,13 @@ async function handleShare() {
         const file = new File([blob], "QRCode.png", {
             type: blob.type
         });
-        
+
+        const shareText = `Crie você também QR-Codes compartilháveis em: ${defaultUrl}`;
+
         await navigator.share({
             files: [file],
-            title: text
+            title: "QR Code Compartilhável",
+            text: shareText
         });
     } catch (error) {
         alert("Seu navegador não suporta compartilhamento.");
