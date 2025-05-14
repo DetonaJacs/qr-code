@@ -176,7 +176,7 @@ async function handleShare() {
             type: blob.type
         });
 
-        const shareText = `Crie vocês também QR-Codes compartilháveis em: ${defaultUrl}`;
+        const shareText = `Crie você também QR-Codes compartilháveis em: ${defaultUrl}`;
 
         await navigator.share({
             files: [file],
