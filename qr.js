@@ -4,7 +4,6 @@ const qrText = document.querySelector(".qr-text");
 const shareBtn = document.querySelector(".share-btn");
 const sizes = document.querySelector(".sizes");
 const toggleWhatsappBtn = document.querySelector(".toggle-whatsapp-btn");
-const generateWhatsappBtn = document.querySelector(".generate-whatsapp-btn");
 const whatsappFields = document.querySelector(".whatsapp-fields");
 const defaultFields = document.querySelector(".default-fields");
 const whatsappNumber = document.querySelector("#whatsapp-number");
@@ -24,7 +23,6 @@ qrText.addEventListener("input", handleQRText);
 sizes.addEventListener("change", handleSize);
 shareBtn.addEventListener("click", handleShare);
 toggleWhatsappBtn.addEventListener("click", toggleWhatsappFields);
-generateWhatsappBtn.addEventListener("click", generateWhatsappQR);
 
 function toggleWhatsappFields() {
 whatsappFields.style.display = whatsappFields.style.display === "none" ? "block" : "none";
@@ -38,33 +36,42 @@ if (whatsappFields.style.display === "block") {
 
 }
 
+// Modifique a função generateWhatsappQR para gerar automaticamente
+function setupWhatsappAutoGeneration() {
+  whatsappNumber.addEventListener("input", generateWhatsappQR);
+  whatsappMessage.addEventListener("input", generateWhatsappQR);
+}
+
 function generateWhatsappQR() {
-const number = whatsappNumber.value.trim();
-if (!number) {
-alert("Por favor, digite um número de WhatsApp válido com DDD");
-whatsappNumber.focus();
-return;
-}
+  const number = whatsappNumber.value.trim();
+  
+  // Se não tem número, não gera
+  if (!number) {
+    qrContainer.innerHTML = "";
+    return;
+  }
 
-// Remove caracteres não numéricos  
-const cleanNumber = number.replace(/\D/g, '');  
+  // Remove caracteres não numéricos  
+  const cleanNumber = number.replace(/\D/g, '');  
   
-let whatsappUrl = `https://wa.me/${cleanNumber}`;  
+  let whatsappUrl = `https://wa.me/${cleanNumber}`;  
   
-if (whatsappMessage.value) {  
+  if (whatsappMessage.value) {  
     whatsappUrl += `?text=${encodeURIComponent(whatsappMessage.value)}`;  
-}  
+  }  
   
-text = whatsappUrl;  
-generateQRCode();  
-qrText.value = whatsappUrl; // Atualiza também o campo normal
-
+  text = whatsappUrl;  
+  generateQRCode();  
+  qrText.value = whatsappUrl; // Atualiza também o campo normal
 }
 
-function handleQRText(e) {
-text = e.target.value || defaultUrl;
-generateQRCode();
-}
+// Na inicialização, adicione:
+document.addEventListener('DOMContentLoaded', function() {
+  // ... seu código existente ...
+  
+  setupWhatsappAutoGeneration(); // Adicione esta linha
+  generateQRCode(); // Mantenha esta
+});
 
 function handleSize(e) {
 size = e.target.value;
