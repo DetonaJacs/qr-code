@@ -183,18 +183,34 @@ async function handleShare() {
       type: blob.type
     });
 
-    // Verificar se o navegador suporta o compartilhamento com arquivos
-    if (navigator.canShare?.({ files: [file] })) {
+    // Criar mensagem com o link gerado
+    const shareMessage = `Confira este QR Code: ${text}\n\nGerado em: ${window.location.href}`;
+
+    // Verificar se é WhatsApp Web
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isWhatsAppWeb = window.location.href.includes('web.whatsapp.com');
+
+    if (isMobile || isWhatsAppWeb) {
+      // Se for mobile ou WhatsApp Web, compartilhar via link do WhatsApp
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+      window.open(whatsappUrl, '_blank');
+    } else if (navigator.canShare?.({ files: [file] })) {
+      // Se for navegador com suporte a compartilhamento de arquivos
       await navigator.share({
         files: [file],
         title: "QR Code WhatsApp - Gerado Online",
+        text: shareMessage,
         url: window.location.href
       });
     } else {
-      console.warn("Compartilhamento de arquivos não suportado neste navegador.");
+      // Fallback para copiar o link
+      await navigator.clipboard.writeText(shareMessage);
+      alert("Link copiado para a área de transferência:\n" + shareMessage);
     }
   } catch (error) {
     console.error("Erro ao tentar compartilhar:", error);
+    // Fallback simples se tudo falhar
+    alert(`Compartilhe este link:\n${text}`);
   }
 }
 
