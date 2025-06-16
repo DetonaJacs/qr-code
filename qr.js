@@ -10,6 +10,7 @@ const defaultFields = document.querySelector(".default-fields");
 const whatsappNumber = document.querySelector("#whatsapp-number");
 const whatsappMessage = document.querySelector("#whatsapp-message");
 
+
 // Configurações iniciais
 const defaultUrl = "https://qr-code-silk-alpha.vercel.app/";
 let colorLight = "#ffffff",
@@ -25,6 +26,8 @@ sizes.addEventListener("change", handleSize);
 shareBtn.addEventListener("click", handleShare);
 toggleWhatsappBtn.addEventListener("click", toggleWhatsappFields);
 generateWhatsappBtn.addEventListener("click", generateWhatsappQR);
+whatsappNumber.addEventListener("input", handleWhatsappInput);
+whatsappMessage.addEventListener("input", handleWhatsappInput);
 
 function toggleWhatsappFields() {
 whatsappFields.style.display = whatsappFields.style.display === "none" ? "block" : "none";
@@ -38,27 +41,38 @@ if (whatsappFields.style.display === "block") {
 
 }
 
-function generateWhatsappQR() {
-const number = whatsappNumber.value.trim();
-if (!number) {
-alert("Por favor, digite um número de WhatsApp válido com DDD");
-whatsappNumber.focus();
-return;
+// Função para lidar com a entrada automática
+function handleWhatsappInput() {
+  // Só gera automaticamente se os campos do WhatsApp estiverem visíveis
+  if (whatsappFields.style.display === "block") {
+    generateWhatsappQR();
+  }
 }
 
-// Remove caracteres não numéricos  
-const cleanNumber = number.replace(/\D/g, '');  
+// Modifique a função generateWhatsappQR para evitar o alerta quando for automático
+function generateWhatsappQR() {
+  const number = whatsappNumber.value.trim();
   
-let whatsappUrl = `https://wa.me/${cleanNumber}`;  
-  
-if (whatsappMessage.value) {  
-    whatsappUrl += `?text=${encodeURIComponent(whatsappMessage.value)}`;  
-}  
-  
-text = whatsappUrl;  
-generateQRCode();  
-qrText.value = whatsappUrl; // Atualiza também o campo normal
+  // Se não tem número, limpa o QR Code (para o caso de apagar o número)
+  if (!number) {
+    if (whatsappFields.style.display === "block") {
+      qrContainer.innerHTML = "";
+    }
+    return;
+  }
 
+  // Remove caracteres não numéricos  
+  const cleanNumber = number.replace(/\D/g, '');  
+  
+  let whatsappUrl = `https://wa.me/${cleanNumber}`;  
+  
+  if (whatsappMessage.value) {  
+    whatsappUrl += `?text=${encodeURIComponent(whatsappMessage.value)}`;  
+  }  
+  
+  text = whatsappUrl;  
+  generateQRCode();  
+  qrText.value = whatsappUrl; // Atualiza também o campo normal
 }
 
 function handleQRText(e) {
