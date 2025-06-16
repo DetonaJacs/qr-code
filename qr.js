@@ -177,40 +177,40 @@ async function handleShare() {
     // Obter a imagem como blob
     const response = await fetch(qrImg.src);
     const blob = await response.blob();
+    const file = new File([blob], "QRCode.png", { type: blob.type });
 
-    // Criar arquivo para compartilhamento
-    const file = new File([blob], "QRCode-WhatsApp.png", {
-      type: blob.type
-    });
+    // Verificar se é um QR Code do WhatsApp
+    const isWhatsappQR = text.startsWith('https://wa.me/');
+    
+    // Criar mensagem de compartilhamento
+    const shareMessage = isWhatsappQR 
+      ? `Contato WhatsApp: ${text}` 
+      : `QR Code gerado em: ${window.location.href}`;
 
-    // Criar mensagem com o link gerado
-    const shareMessage = `Confira este QR Code: ${text}\n\nGerado em: ${window.location.href}`;
-
-    // Verificar se é WhatsApp Web
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const isWhatsAppWeb = window.location.href.includes('web.whatsapp.com');
-
-    if (isMobile || isWhatsAppWeb) {
-      // Se for mobile ou WhatsApp Web, compartilhar via link do WhatsApp
-      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
-      window.open(whatsappUrl, '_blank');
-    } else if (navigator.canShare?.({ files: [file] })) {
-      // Se for navegador com suporte a compartilhamento de arquivos
+    // Compartilhar imagem + texto
+    if (navigator.canShare?.({ files: [file] })) {
       await navigator.share({
         files: [file],
-        title: "QR Code WhatsApp - Gerado Online",
+        title: isWhatsappQR ? "Contato WhatsApp" : "QR Code Gerado",
         text: shareMessage,
-        url: window.location.href
+        url: isWhatsappQR ? text : window.location.href
       });
-    } else {
-      // Fallback para copiar o link
+    } 
+    // Fallback para WhatsApp Web/Desktop
+    else if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) {
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+      window.open(whatsappUrl, '_blank');
+    } 
+    // Fallback genérico
+    else {
       await navigator.clipboard.writeText(shareMessage);
-      alert("Link copiado para a área de transferência:\n" + shareMessage);
+      alert(`Conteúdo copiado: ${shareMessage}\n\nImagem disponível para download.`);
     }
   } catch (error) {
-    console.error("Erro ao tentar compartilhar:", error);
-    // Fallback simples se tudo falhar
-    alert(`Compartilhe este link:\n${text}`);
+    console.error("Erro ao compartilhar:", error);
+    // Fallback extremo
+    const shareText = isWhatsappQR ? text : window.location.href;
+    prompt("Copie este link para compartilhar:", shareText);
   }
 }
 
