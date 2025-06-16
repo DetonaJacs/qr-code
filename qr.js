@@ -4,7 +4,6 @@ const qrText = document.querySelector(".qr-text");
 const shareBtn = document.querySelector(".share-btn");
 const sizes = document.querySelector(".sizes");
 const toggleWhatsappBtn = document.querySelector(".toggle-whatsapp-btn");
-const generateWhatsappBtn = document.querySelector(".generate-whatsapp-btn");
 const whatsappFields = document.querySelector(".whatsapp-fields");
 const defaultFields = document.querySelector(".default-fields");
 const whatsappNumber = document.querySelector("#whatsapp-number");
@@ -25,7 +24,6 @@ qrText.addEventListener("input", handleQRText);
 sizes.addEventListener("change", handleSize);
 shareBtn.addEventListener("click", handleShare);
 toggleWhatsappBtn.addEventListener("click", toggleWhatsappFields);
-generateWhatsappBtn.addEventListener("click", generateWhatsappQR);
 whatsappNumber.addEventListener("input", handleWhatsappInput);
 whatsappMessage.addEventListener("input", handleWhatsappInput);
 
