@@ -177,40 +177,24 @@ async function handleShare() {
     // Obter a imagem como blob
     const response = await fetch(qrImg.src);
     const blob = await response.blob();
-    const file = new File([blob], "QRCode.png", { type: blob.type });
 
-    // Verificar se é um QR Code do WhatsApp
-    const isWhatsappQR = text.startsWith('https://wa.me/');
-    
-    // Criar mensagem de compartilhamento
-    const shareMessage = isWhatsappQR 
-      ? `Contato WhatsApp: ${text}` 
-      : `QR Code gerado em: ${window.location.href}`;
+    // Criar arquivo para compartilhamento
+    const file = new File([blob], "QRCode-WhatsApp.png", {
+      type: blob.type
+    });
 
-    // Compartilhar imagem + texto
+    // Verificar se o navegador suporta o compartilhamento com arquivos
     if (navigator.canShare?.({ files: [file] })) {
       await navigator.share({
         files: [file],
-        title: isWhatsappQR ? "Contato WhatsApp" : "QR Code Gerado",
-        text: shareMessage,
-        url: isWhatsappQR ? text : window.location.href
+        title: "QR Code WhatsApp - Gerado Online",
+        url: window.location.href
       });
-    } 
-    // Fallback para WhatsApp Web/Desktop
-    else if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) {
-      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
-      window.open(whatsappUrl, '_blank');
-    } 
-    // Fallback genérico
-    else {
-      await navigator.clipboard.writeText(shareMessage);
-      alert(`Conteúdo copiado: ${shareMessage}\n\nImagem disponível para download.`);
+    } else {
+      console.warn("Compartilhamento de arquivos não suportado neste navegador.");
     }
   } catch (error) {
-    console.error("Erro ao compartilhar:", error);
-    // Fallback extremo
-    const shareText = isWhatsappQR ? text : window.location.href;
-    prompt("Copie este link para compartilhar:", shareText);
+    console.error("Erro ao tentar compartilhar:", error);
   }
 }
 
