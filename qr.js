@@ -177,24 +177,51 @@ async function handleShare() {
     // Obter a imagem como blob
     const response = await fetch(qrImg.src);
     const blob = await response.blob();
+    const file = new File([blob], "QRCode.png", { type: blob.type });
 
-    // Criar arquivo para compartilhamento
-    const file = new File([blob], "QRCode-WhatsApp.png", {
-      type: blob.type
-    });
+    // Determinar se é um QR Code do WhatsApp
+    const isWhatsappQR = text.startsWith('https://wa.me/');
+    
+    // Criar dados de compartilhamento
+    const shareData = {
+      files: [file],
+      title: "QR Code Gerado",
+      text: isWhatsappQR ? "Contato WhatsApp:" : "QR Code criado com:",
+      url: isWhatsappQR ? text : window.location.href
+    };
 
-    // Verificar se o navegador suporta o compartilhamento com arquivos
-    if (navigator.canShare?.({ files: [file] })) {
-      await navigator.share({
-        files: [file],
-        title: "QR Code WhatsApp - Gerado Online",
-        url: window.location.href
-      });
-    } else {
-      console.warn("Compartilhamento de arquivos não suportado neste navegador.");
+    // Compartilhar via API Web Share se disponível
+    if (navigator.canShare && navigator.canShare(shareData)) {
+      await navigator.share(shareData);
+    } 
+    // Fallback para WhatsApp específico
+    else if (isWhatsappQR && (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent))) {
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+    // Fallback genérico
+    else {
+      // Criar link de download temporário
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'qrcode.png';
+      document.body.appendChild(a);
+      a.click();
+      
+      // Copiar o link relevante
+      await navigator.clipboard.writeText(isWhatsappQR ? text : window.location.href);
+      alert(`${isWhatsappQR ? "Link do WhatsApp" : "Link do app"} copiado!\nA imagem foi baixada automaticamente.`);
+      
+      // Limpar
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
     }
   } catch (error) {
-    console.error("Erro ao tentar compartilhar:", error);
+    console.error("Erro ao compartilhar:", error);
+    // Fallback extremamente simples
+    prompt("Copie este link:", text.startsWith('https://wa.me/') ? text : window.location.href);
   }
 }
 
