@@ -7,7 +7,7 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#25D366",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "./img/logo.png",
@@ -19,5 +19,9 @@
       "sizes": "512x512",
       "type": "image/png"
     }
+  ],
+  "lang": "pt",
+  "categories": [
+    "productivity"
   ]
 }
